@@ -3,119 +3,162 @@ package com.example.tablayoutposition
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tablayoutposition.adapter.LetterAdapter
-import com.example.tablayoutposition.adapter.NumberAdapter
-import com.example.tablayoutposition.dataclass.LETTER
-import com.example.tablayoutposition.dataclass.NUMBER
+import com.example.tablayoutposition.adapter.FiftyAdapter
+import com.example.tablayoutposition.adapter.ZeroAdapter
+import com.example.tablayoutposition.dataclass.FIFTY
+import com.example.tablayoutposition.dataclass.ZERO
 import com.google.android.material.tabs.TabLayout
+import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val rvNumber = findViewById<RecyclerView>(R.id.rv_number)
-        val rvLetter = findViewById<RecyclerView>(R.id.rv_letter)
+        val rvZero = findViewById<RecyclerView>(R.id.rv_zero)
+        val rvFifty = findViewById<RecyclerView>(R.id.rv_fifty)
         val tabs = findViewById<TabLayout>(R.id.tab)
         val scrollView = findViewById<NestedScrollView>(R.id.scrollView)
-        var isUseScroll = false
+        val layoutOne = findViewById<TextView>(R.id.layout_one)
+        var isUserScroll = false
 
         tabs.addTab(tabs.newTab().apply {
-            text = "0"
+            text = "零"
 
         })
         tabs.addTab(tabs.newTab().apply {
 
-            text = "50"
+            text = "五十"
         })
 
-        val lowList: ArrayList<NUMBER> = arrayListOf()
-        val highList: ArrayList<LETTER> = arrayListOf()
+        val lowList: ArrayList<ZERO> = arrayListOf()
+        val highList: ArrayList<FIFTY> = arrayListOf()
 
-        for (i in 0..50) {
-
-            lowList.add(NUMBER(i.toString()))
+        for (i in 0..49) {
+            lowList.add(ZERO(i.toString()))
         }
 
         for (i in 50..100) {
-            highList.add(LETTER(i.toString()))
+            highList.add(FIFTY(i.toString()))
         }
 
-        val numberAdapter = NumberAdapter(lowList)
-        val letterAdapter = LetterAdapter(highList)
-        ViewCompat.setNestedScrollingEnabled(rvNumber, false)
-        ViewCompat.setNestedScrollingEnabled(rvLetter, false)
+        val numberAdapter = ZeroAdapter(lowList)
+        val letterAdapter = FiftyAdapter(highList)
+        ViewCompat.setNestedScrollingEnabled(rvZero, false)
+        ViewCompat.setNestedScrollingEnabled(rvFifty, false)
 
-        rvNumber.apply {
+        rvZero.apply {
+            setHasFixedSize(false)
             adapter = numberAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
 
         }
 
-        rvLetter.apply {
+        rvFifty.apply {
+            setHasFixedSize(false)
             adapter = letterAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
-
         }
 
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            //tab被選中時
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                isUseScroll = true
+                isUserScroll = true
                 when (tab?.text) {
                     "0" -> {
-
-                            rvNumber.top
-
-                        scrollView.scrollTo(0, rvNumber.top)
+                        val dy = if (rvZero.isVisible) {
+                            rvZero.top
+                        } else {
+                            0
+                        }
+                        scrollView.scrollTo(0, dy - tabs.height + 20)
                     }
-
                     "50" -> {
-                        scrollView.scrollTo(0, rvLetter.top)
+                        scrollView.scrollTo(0, rvFifty.top - tabs.height + 20)
                     }
                 }
                 tabs.setScrollPosition(tab?.position ?: 0, 0f, true)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                isUseScroll = true
+                isUserScroll = true
                 when (tab?.text) {
                     "0" -> {
-                        scrollView.scrollTo(0, rvNumber.top)
+                        val dy = if (rvZero.isVisible) {
+                            rvZero.top
+                        } else {
+                            0
+                        }
+                        scrollView.scrollTo(0, dy - tabs.height + 20)
                     }
 
                     "50" -> {
-                        scrollView.scrollTo(0, rvLetter.top)
+                        scrollView.scrollTo(0, rvFifty.top - tabs.height + 20)
                     }
                 }
                 tabs.setScrollPosition(tab?.position ?: 0, 0f, true)
             }
-
-
         })
-//        tabs.alpha = 0f
+        //全透明
+        tabs.alpha = 0f
         scrollView.setOnScrollChangeListener { v, _, scrollY, _, _ ->
             if (scrollY == 0) {
                 tabs.visibility = View.GONE
+                //全透明
                 tabs.alpha = 0f
-
+                return@setOnScrollChangeListener
             } else {
                 if (tabs.isGone) {
                     tabs.visibility = View.VISIBLE
                 }
+                //由透明漸漸顯示
+                tabs.alpha = abs((scrollY.toFloat() + tabs.height) / layoutOne.bottom.toFloat())
+            }
+            if (isUserScroll) {
+                isUserScroll = false
+                return@setOnScrollChangeListener
+            }
+            v.top.let {
+                val calculationScrollY = scrollY.toFloat() + tabs.height
+                //0
+                val zero = when {
+                    rvZero.top != 0 && rvZero.isVisible -> {
+                        rvZero.top
+                    }
+                    else -> 0
+                }
+                //50
+                val fifty = if (rvFifty.isVisible) {
+                    rvFifty.top
+                } else {
+                    0
+                }
+
+                val topList = arrayListOf(zero, fifty).filter { it > 0 }
+                val topSize = topList.size - 1
+                topList.mapIndexed { index, top ->
+                    if (index < topSize) {
+                        if (calculationScrollY > top && calculationScrollY < topList[index + 1]) {
+                            tabs.setScrollPosition(index, 0f, true)
+                            return@setOnScrollChangeListener
+                        }
+                    } else {
+                        if (calculationScrollY > top) {
+                            tabs.setScrollPosition(index, 0f, true)
+                            return@setOnScrollChangeListener
+                        }
+                    }
+                }
             }
         }
-
-
     }
-
-
 }

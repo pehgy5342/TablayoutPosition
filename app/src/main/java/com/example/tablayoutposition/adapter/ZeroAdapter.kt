@@ -5,17 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tablayoutposition.dataclass.LETTER
+import com.example.tablayoutposition.dataclass.ZERO
 import com.example.tablayoutposition.R
 
-class LetterAdapter (private val list: ArrayList<LETTER>) : RecyclerView.Adapter<LetterAdapter.LetterViewHolder>() {
+class ZeroAdapter(private val list: ArrayList<ZERO>) : RecyclerView.Adapter<ZeroAdapter.NumberViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LetterViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NumberViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_word, parent, false)
-        return LetterViewHolder(view)
+        return NumberViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: LetterViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: NumberViewHolder, position: Int) {
         holder.bind(list[position])
 
     }
@@ -23,13 +23,13 @@ class LetterAdapter (private val list: ArrayList<LETTER>) : RecyclerView.Adapter
     override fun getItemCount(): Int = list.size
 
 
-    inner class LetterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class NumberViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val word = itemView.findViewById<TextView>(R.id.txt_word)
 
 
-        fun bind(letter: LETTER) {
-            word.text = letter.letter
+        fun bind(number: ZERO) {
+            word.text = number.zero
         }
     }
 

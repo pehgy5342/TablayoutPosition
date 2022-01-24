@@ -4,26 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00BCD4"
+        app:title="我是標題" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
 
-    </com.google.android.material.tabs.TabLayout>
-
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/recyclerView"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content">-->
-    <!--    </androidx.recyclerview.widget.RecyclerView>-->
+        android:visibility="gone"
+        app:tabGravity="center"
+        app:tabIndicatorColor="#03A9F4"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="2dp"
+        app:tabSelectedTextColor="#03A9F4"
+        app:tabTextColor="@color/black"
+        tools:visibility="visible" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,28 +41,25 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/layout_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="我是測試 \n我是測試 \n我是測試 \n我是測試 \n我是測試 \n我是測試 \n我是測試 \n我是測試 " />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_number"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_marginTop="10dp"
+                android:text="我是第一區塊 \n我是第一區塊 \n我是第一區塊 \n我是第一區塊 \n我是第一區塊 \n我是第一區塊 \n我是第一區塊 \n我是第一區塊 \n我是第一區塊 \n我是第一區塊 \n我是第一區塊 "
+                android:textColor="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_letter"
+                android:id="@+id/rv_zero"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_weight="1" />
 
-            <!--    <androidx.recyclerview.widget.RecyclerView-->
-            <!--        android:id="@+id/rv_chinese"-->
-            <!--        android:layout_width="match_parent"-->
-            <!--        android:layout_height="wrap_content">-->
-            <!--    </androidx.recyclerview.widget.RecyclerView>-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_fifty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

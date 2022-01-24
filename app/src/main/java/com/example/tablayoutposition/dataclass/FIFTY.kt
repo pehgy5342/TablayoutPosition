@@ -1,3 +1,3 @@
 package com.example.tablayoutposition.dataclass
 
-data class LETTER(val letter:String)
+data class FIFTY(val fifty:String)
